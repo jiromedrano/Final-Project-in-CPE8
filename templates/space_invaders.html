@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Space Invaders</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/space_invaders.css') }}"
+    />
+    <script src="{{ url_for('static', filename='js/space_invaders.js') }}"></script>
+
+</head>
+<body>
+  <body>
+  <div class="container">
+
+    <div class="game-container">
+      <div class="game-controls">
+        <div></div> <button id="quitGameIngame" class="quit-game-button">Quit Game</button>
+      </div>
+      <canvas id="gameCanvas" width="800" height="600" class="game-canvas"></canvas>
+
+      <div id="startScreen" class="overlay">
+        <h2 class="overlay-title">SPACE INVADERS</h2>
+        <p class="overlay-text">Blast waves of aliens in this retro space showdown!</p>
+        <div class="button-group">
+          <button id="startButton" class="button start-button">Start Game</button>
+          <button id="quitButton" class="button outline-button">Quit Game</button>
+        </div>
+      </div>
+
+      <div id="gameOverScreen" class="overlay hidden">
+        <h2 class="overlay-title game-over">GAME OVER!</h2>
+        <p class="overlay-text">Total Points: <span id="gameOverScore">0</span></p>
+        <div class="button-group">
+          <button id="playAgainButton" class="button destructive-button">PLAY AGAIN</button>
+          <button id="homeButton" class="button outline-button">BACK TO HOME</button>
+        </div>
+      </div>
+
+      <div id="gameWonScreen" class="overlay hidden">
+        <h2 class="overlay-title game-won">YOU WIN!</h2>
+        <p class="overlay-text">Total Points: <span id="gameWonScore">0</span></p>
+        <div class="button-group">
+          <button id="playAgainWonButton" class="button primary-button">PLAY AGAIN</button>
+          <button id="homeWonButton" class="button outline-button">BACK TO HOME</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

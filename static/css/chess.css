@@ -1,0 +1,417 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #fff;
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+  line-height: 1.6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+#game-container {
+  width: 800px;
+  height: 750px;
+  position: relative;
+}
+
+.screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  transition: all 0.5s ease;
+}
+
+.hidden {
+  display: none;
+}
+
+h1 {
+  font-size: 4.5rem;
+  margin-bottom: 1rem;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  letter-spacing: 1px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.game-description {
+  font-size: 1.1rem;
+  color: #fff;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+  max-width: 500px;
+  text-align: center;
+  opacity: 0.9;
+}
+
+button {
+  background-color: #8b4513;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  padding: 1rem 2.5rem;
+  margin: 0.5rem;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.game-layout {
+  display: flex;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+  max-width: 1-00px;
+  margin: 0 auto;
+}
+
+.side-panel.left-panel { /* Corrected selector */
+  width: 500px; /* Keep this for now */
+  background-color: white; /* Changed to white */
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  color: black; /* Default text color to black for white background */
+  margin-right: 10px;
+}
+
+/* Style for labels within the left side-panel */
+.side-panel.left-panel label {
+  color: black; /* Ensure labels are black */
+}
+
+/* Style for input elements within the left side-panel */
+.side-panel.left-panel input[type="text"],
+.side-panel.left-panel input[type="number"],
+.side-panel.left-panel select,
+.side-panel.left-panel textarea {
+  color: black; /* Input text color */
+  background-color: #eee; /* Light background for inputs for contrast */
+  border: 1px solid #ccc; /* Light border */
+}
+
+.side-panel.left-panel .turn-indicator-panel { /* Target turn indicator within left panel */
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: white; /* Keep white */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 300px;
+  color: black; /* Text color black */
+}
+
+.side-panel.left-panel .turn-indicator-panel input[type="radio"] {
+  margin-right: 8px;
+  accent-color: black; /* Style the radio button */
+}
+
+.side-panel.left-panel .turn-indicator-panel label {
+  font-weight: 500;
+  color: black; /* Ensure labels are black */
+}
+
+.side-panel.left-panel .captured-panel { /* Target captured panel within left panel */
+  padding: 10px;
+  border-radius: 8px;
+  background-color: white; /* Keep white */
+  color: black; /* Text color black */
+}
+
+.side-panel.left-panel .none-text { /* Target none text within left panel */
+  color: #555; /* Darker gray for better readability */
+  font-style: italic;
+  margin-top: 5px;
+  font-size: 0.9rem;
+}
+
+.side-panel.right-panel { /* Corrected selector and made it black */
+  width: 500px; /* Keep this for now */
+  background-color: black; /* Changed to black */
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  color: white; /* Default text color to white */
+}
+
+/* Style for labels within the right side-panel */
+.side-panel.right-panel label {
+  color: white; /* Ensure labels are white */
+}
+
+/* Style for input elements within the right side-panel (if any) */
+.side-panel.right-panel input[type="text"],
+.side-panel.right-panel input[type="number"],
+.side-panel.right-panel select,
+.side-panel.right-panel textarea {
+  color: white; /* Input text color */
+  background-color: #333; /* Darker background for inputs for contrast */
+  border: 1px solid #555; /* Darker border */
+}
+
+.side-panel.right-panel .turn-indicator-panel { /* Target turn indicator within right panel */
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: black; /* Keep black */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 300px;
+  color: white; /* Text color white */
+}
+
+.side-panel.right-panel .turn-indicator-panel input[type="radio"] {
+  margin-right: 8px;
+  accent-color: white; /* Style the radio button */
+}
+
+.side-panel.right-panel .turn-indicator-panel label {
+  font-weight: 500;
+  color: white; /* Ensure labels are white */
+}
+
+.side-panel.right-panel .captured-panel { /* Target captured panel within right panel */
+  padding: 10px;
+  border-radius: 8px;
+  background-color: black; /* Keep black */
+  color: white; /* Text color white */
+}
+
+.side-panel.right-panel .none-text { /* Target none text within right panel */
+  color: #ccc; /* Lighter gray for better readability */
+  font-style: italic;
+  margin-top: 5px;
+  font-size: 0.9rem;
+}
+
+.board-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 5px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  max-width: 700px;
+  width: 100%;
+}
+
+.game-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  transition: all 0.3s ease;
+}
+
+.winner-buttons {
+  display: flex;
+  gap: 20px;
+  margin-top: 1 rem;
+}
+
+/* Existing Chess Board Styles */
+.container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Chess Board Styles */
+.chess-board {
+  width: 100%;
+  max-width: 600px;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  border: 4px solid #8b4513;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.square {
+  aspect-ratio: 1/1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.light-square {
+  background-color: #f0d9b5;
+}
+
+.dark-square {
+  background-color: #b58863;
+}
+
+.piece {
+  font-size: 3.5rem;
+  line-height: 0.5;
+  user-select: none;
+  transition: all 0.3s ease;
+}
+
+.piece:hover {
+  transform: scale(1.05);
+}
+
+.selected {
+  box-shadow: inset 0 0 0 3px #3498db;
+}
+
+.possible-move {
+  box-shadow: inset 0 0 0 3px #2ecc71;
+}
+
+/* Game Status Styles */
+.game-status {
+  width: 100%;
+  max-width: 480px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+}
+
+.status-alert {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.turn-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.turn-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.turn-color.white {
+  background-color: white;
+  border: 1px solid black;
+}
+
+.turn-color.black {
+  background-color: black;
+}
+
+.turn-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* Captured Pieces Styles */
+.captured-subtitle {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.captured-subtitle {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.pieces-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  min-height: 1.5rem;
+}
+
+.captured-piece {
+  font-size: 1.5rem;
+}
+
+.advantage {
+  text-align: center;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+/* Reset Button */
+.reset-button {
+  padding: 0.5rem 1rem;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.reset-button:hover {
+  background-color: #e0e0e0;
+}
+
+/* Add hover effect to pieces */
+.piece {
+  transition: transform 0.2s;
+}
+
+.square:hover .piece {
+  transform: scale(1.1);
+}
+
+/* Winner screen styles */
+#winner-text {
+  color: #8b4513;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}

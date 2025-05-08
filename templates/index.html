@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAME ON - Game Portal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+
+</head>
+<body>
+    <header>
+        <div class="left-group">
+            <button id="settings-button"><i class="fas fa-bars"></i></button>
+            <div class="logo">GAME <span>ON</span></div>
+        </div>
+
+        <div class="search-container">
+        <form action="/search" method="GET">
+            <input type="text" id="search-input" name="query" placeholder="Search games...">
+            <button type="submit" id="search-button"><i class="fas fa-search"></i></button>
+        </form>
+    </div>
+    </header>
+
+    <!-- Sidebar: should be outside the header -->
+    <div id="mySidebar" class="sidebar">
+      <div class="settings-header">
+        <button class="close-btn" onclick="closeNav()">×</button>
+        <div class="logo">GAME <span>ON</span></div>
+      </div>
+      <div id="navigation-links">
+        <ul class="nav-list">
+          <li>
+            <button class="nav-button" onclick="tasks()">
+              TASKS
+            </button>
+          </li>
+          <li>
+            <button
+              class="nav-button"
+              onclick="rewards()"
+            >
+              REWARDS
+            </button>
+          </li>
+          <li>
+            <button class="nav-button" onclick="confirmLogout()">
+              LOG OUT
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const settingsButton = document.getElementById("settings-button");
+    const sidebar = document.getElementById("mySidebar");
+    const navigationLinks = document.getElementById("navigation-links");
+    const closeButton = sidebar.querySelector('.close-btn'); // Get the close button
+
+    let previousSidebarContent = null;
+
+    async function updateSettingsPanel() {
+  try {
+    const response = await fetch("/user_status");
+    const data = await response.json();
+    const navList = document.querySelector(".nav-list");
+    navList.innerHTML = ""; // clear everything first
+
+    // Always show TASKS
+    const tasksLi = document.createElement("li");
+    const tasksBtn = document.createElement("button");
+    tasksBtn.className = "nav-button";
+    tasksBtn.textContent = "TASKS";
+    tasksBtn.onclick = () => window.location.href = "/tasks";
+    tasksLi.appendChild(tasksBtn);
+    navList.appendChild(tasksLi);
+
+    // Always show REWARDS
+    const rewardsLi = document.createElement("li");
+    const rewardsBtn = document.createElement("button");
+    rewardsBtn.className = "nav-button";
+    rewardsBtn.textContent = "REWARDS";
+    rewardsBtn.onclick = () => window.location.href = "/rewards";
+    rewardsLi.appendChild(rewardsBtn);
+    navList.appendChild(rewardsLi);
+
+    // Show login or logout depending on user status
+    if (data.logged_in) {
+      const logoutLi = document.createElement("li");
+      const logoutBtn = document.createElement("button");
+      logoutBtn.className = "nav-button";
+      logoutBtn.textContent = "LOG OUT";
+      logoutBtn.onclick = confirmLogout;
+      logoutLi.appendChild(logoutBtn);
+      navList.appendChild(logoutLi);
+    } else {
+      const loginLi = document.createElement("li");
+      const loginBtn = document.createElement("button");
+      loginBtn.className = "nav-button";
+      loginBtn.textContent = "LOG IN";
+      loginBtn.onclick = () => window.location.href = "/login";
+      loginLi.appendChild(loginBtn);
+      navList.appendChild(loginLi);
+
+      const signupLi = document.createElement("li");
+      const signupBtn = document.createElement("button");
+      signupBtn.className = "nav-button";
+      signupBtn.textContent = "SIGN UP";
+      signupBtn.onclick = () => window.location.href = "/register";
+      signupLi.appendChild(signupBtn);
+      navList.appendChild(signupLi);
+    }
+
+  } catch (err) {
+    console.error("Failed to update settings panel:", err);
+  }
+}
+
+
+    window.showMainNavigation = function () {
+        console.log("Showing main navigation...");
+        if (previousSidebarContent) {
+            navigationLinks.innerHTML = previousSidebarContent;
+            previousSidebarContent = null;
+            // Re-attach event listeners if necessary
+        }
+    };
+
+    window.confirmLogout = function () {
+        if (confirm("Are you sure you want to log out?")) {
+            window.location.href = '/logout';
+        }
+    };
+
+    function openNav() {
+        updateSettingsPanel();
+        sidebar.classList.add("show");
+    }
+
+    function closeNav() {
+        sidebar.classList.remove("show");
+    }
+
+    settingsButton.addEventListener("click", openNav);
+    closeButton.addEventListener("click", closeNav);
+});
+</script>
+
+    <main>
+        <div class="games-container">
+            {% for game in games %}
+            <div class="game-card" data-game-id="{{ game.id }}">
+                <div class="game-image">
+                   <img src="{{ url_for('static', filename='images/' + (game.image_filename or 'placeholder.jpg')) }}"
+     alt="{{ game.title }}"
+     onerror="this.src='{{ url_for('static', filename='images/placeholder.jpg') }}'">
+
+
+                    <span class="game-badge">{{ game.category }}</span>
+                </div>
+                <div class="game-info">
+                    <h3 class="game-title">{{ game.title }}</h3>
+                    <p class="game-description">{{ game.description }}</p>
+                    <div class="game-meta">
+                        <button class="play-now-btn" data-game-id="{{ game.id }}">Play Now</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <section class="categories-section">
+    <h2>CATEGORIES</h2>
+    <div class="categories-container">
+        {% for category, count in categories.items() %}
+        <div class="category-card" onclick="openGamesModal('{{ category }}')">
+            <h3>{{ category.upper() }}</h3>
+            <p>{{ count }} games</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<div id="gamesModal" class="modal">
+    <div class="modal-content">
+        <span class="close-button" onclick="closeGamesModal()">&times;</span>
+        <h2>GAMES IN <span id="modalCategoryTitle"></span></h2>
+        <div class="modal-games-container" id="modalGamesContainer">
+            </div>
+    </div>
+</div>
+
+<script>
+    const games = [
+         {
+            "id": "1",
+            "title": "CHECKERS",
+            "image_filename": "static/images/checkers.png",
+            "description": "Leap, capture, and crown your way to victory!",
+            "category": "Strategy",
+            "how_to_play": [
+                "Click 'Play Now' to begin.",
+                "Players take turns moving one of their pieces diagonally.",
+                "The PRIMARY GOAL is to 'eat' (capture) the opponent's pieces by jumping over them diagonally into an empty square immediately beyond.",
+                {
+                    "main_point": "Movement Rules:",
+                    "sub_points": [
+                        "Regular Pieces: Can only move forward diagonally one square to an adjacent empty square (either to the right-front or left-front).",
+                        "Kings: When one of your pieces reaches the opponent's king row (the back row on their side of the board), it is crowned and becomes a 'King'. Kings can move one square diagonally in any of the four directions: forward-right, forward-left, backward-right, or backward-left.",
+                    ]
+                },
+                "If a capture is possible, you MUST take it. Capturing is always the priority over a regular move.",
+                "The first player to capture all of their opponent's pieces wins the game."
+            ],
+        },
+        {
+            "id": "2",
+            "title": "CHESS",
+            "image_filename": "static/images/chess.png",
+            "description": "Outthink, outplay, and checkmate your way to glory.",
+            "category": "Strategy",
+            "how_to_play": [
+                "Click 'Play Now' to begin a game of Chess.",
+                "Each player starts with 16 pieces: a King, a Queen, two Rooks, two Knights, two Bishops, and eight Pawns. These are arranged in a specific starting position on an 8x8 checkered board.",
+                {
+                    "main_point": "Players take turns moving one of their pieces. Each type of piece has its own unique way of moving:",
+                    "sub_points": [
+                            "King: Moves one square in any direction (horizontally, vertically, or diagonally).",
+                            "Queen: Moves any number of squares horizontally, vertically, or diagonally.",
+                            "Rook: Moves any number of squares horizontally or vertically.",
+                            "Bishop: Moves any number of squares diagonally.",
+                            "Knight: Moves in an 'L' shape: two squares in one direction (horizontally or vertically) and then one square perpendicularly.",
+                            "Pawn: Moves one square forward, but can move two squares forward on its first move. Pawns capture opponent's pieces diagonally one square forward."
+                    ]
+                },
+                "Capturing opponent's pieces is done by moving your piece to the square occupied by the opponent's piece. The captured piece is removed from the board.",
+                "A key concept is 'check': when your King is under attack by an opponent's piece. The player whose King is in check must make a move to remove the threat.",
+                "The ultimate goal is to 'checkmate' the opponent's King. Checkmate occurs when the King is in check and there is no legal move that can remove it from attack.",
+                "The player who delivers checkmate wins the game."
+            ],
+        },
+        {
+            "id": "3",
+            "title": "MEMORY",
+            "image_filename": "static/images/memory.png",
+            "description": "Flip, match, and train your brain with every turn.",
+            "category": "Puzzle",
+            "how_to_play": [
+                "Click 'Play Now' to begin.",
+                "On each turn, click on two cards to flip them over and reveal what's underneath.",
+                "Your goal is to find matching pairs of cards. If the two cards you flipped are a match, they will remain face-up.",
+                "If the cards are not a match, they will be flipped back face-down. Pay close attention and remember what was on each card and where it was located!",
+                "Continue taking turns flipping two cards until all pairs have been successfully matched and the entire board is cleared.",
+                "Try to remember the location of the cards and find all the pairs using the fewest number of moves."
+            ],
+        },
+        {
+            "id": "4",
+            "title": "SCRABBLE",
+            "image_filename": "static/images/scrabble.png",
+            "description": "Craft clever words and dominate the board with brainpower.",
+            "category": "Word",
+            "how_to_play": [
+                "Click 'Play Now' to begin.",
+                "Each player (you and the AI) starts with a rack of 7 letter tiles drawn randomly from a bag of 86 tiles.",
+                "As the first player, you should form a word of at least two letters on the center star space of the board.",
+                "Subsequent players take turns. While standard play involves adding letters to existing words to form new, valid English words that connect to at least one previously played letter, be aware that the AI opponent frequently chooses to pass its turn instead of playing.",
+                "All words formed in a turn by the human player (horizontally and vertically) must be valid English words. Due to the AI's tendency to pass, opportunities to build upon existing words may be limited.",
+                "Players (you and AI) draw new tiles from the bag to replenish their racks to 7 after each of their turns. However, if both players pass twice consecutively (a total of four passes), the game will end, potentially with very few words played.",
+                "Scoring is based on the letter values of the tiles used and the premium squares (Double Letter Score, Triple Letter Score, Double Word Score, Triple Word Score) that the word covers.",
+                "The game ends when all tiles have been drawn from the bag and one player has used all their tiles, or when all possible plays have been made.",
+                "The player with the highest total score at the end of the game wins."
+            ],
+        },
+        {
+            "id": "5",
+            "title": "SNAKES AND LADDERS",
+            "image_filename": "static/images/snakes_and_ladders.png",
+            "description": "Slide down snakes or shoot up ladders—your luck decides!",
+            "category": "Board Game",
+            "how_to_play": [
+                "Click 'Play Now' to begin.",
+                "Before starting, you can choose to play with 2, 3, or 4 players.",
+                "Players take turns rolling a standard six-sided die.",
+                "The number rolled on the die indicates how many squares your token moves along the numbered path on the game board.",
+                "If a player rolls a 6, they move their token accordingly AND get an extra turn to roll the die again.",
+                "If your token lands exactly on the bottom of a ladder, you immediately climb up to the square at the top of the ladder, allowing for faster progress.",
+                "However, if your token lands exactly on the head of a snake, you must slide down to the square at the snake's tail, potentially losing progress.",
+                "The first player to reach the final square [100] wins the game. You must land exactly on the final square; if your roll takes you beyond it, you typically need to roll the exact number to land on it in a subsequent turn."
+            ],
+        },
+        {
+            "id": "6",
+            "title": "SPACE INVADERS",
+            "image_filename": "static/images/space_invaders.png",
+            "description": "Blast waves of aliens in this retro space showdown!",
+            "category": "Arcade",
+            "how_to_play": [
+                "Click 'Play Now' to begin.",
+                "Move your spaceship left and right using the arrow keys.",
+                "Press the Spacebar to fire your laser cannon.",
+                "Your primary objective is to eliminate the waves of descending alien invaders in each wave before they reach the bottom of the screen. If enemies reach the bottom (disappear from the canvas), the game will end. Note: The regular alien invaders do not fire back.",
+                "Be aware! Periodically, a BIG MONSTER will appear after you capture 30 aliens! This creature is tougher to defeat and may have unique attack patterns.",
+                "Focus your fire on both the regular aliens and the BIG MONSTER when it appears.",
+                "Avoid any attacks from the BIG MONSTER.",
+                "You have a limited number of lives. Losing all your lives ends the game."
+            ],
+        },
+        {
+            "id": "7",
+            "title": "TETRIS",
+            "image_filename": "static/images/tetris.png",
+            "description": "Drop, rotate, and stack your way to a perfect line!",
+            "category": "Puzzle",
+            "how_to_play": [
+                "Click 'Play Now' to begin.",
+                "As blocks fall from the top of the screen, use the left and right arrow keys to move them horizontally.",
+                "Use the up arrow key to rotate the falling tetrominoes.",
+                "Your goal is to maneuver and rotate the falling blocks so they fit together to form complete horizontal lines across the playing field.",
+                "When a horizontal line is completely filled with blocks, it disappears, and you earn points. The blocks above the cleared line will shift down.",
+                "Strategically clear multiple lines at once to earn significantly more points.",
+                "The game continues as more and more blocks fall at an increasing speed.",
+                "The game ends when the falling blocks stack up and reach the top of the playing field, preventing new blocks from entering."
+            ],
+        },
+        {
+            "id": "8",
+            "title": "TIC TAC TOE",
+            "image_filename": "static/images/tic_tac_toe.png",
+            "description": "Simple, quick, and always a battle of wits and Xs!",
+            "category": "Puzzle",
+            "how_to_play": [
+                "Click 'Play Now' to begin.",
+                "Players take turns choosing an empty square on the 3x3 grid to place their mark (one player uses 'X', the other uses 'O').",
+                "The first player to get three of their marks in a row (horizontally, vertically, or diagonally) wins the game.",
+                "If all nine squares on the grid are filled and neither player has three in a row, the game is a draw."
+            ],
+        }
+    ];
+
+ const modal = document.getElementById("gamesModal");
+    const closeButton = document.querySelector(".close-button");
+    const modalGamesContainer = document.getElementById("modalGamesContainer");
+    const modalCategoryTitle = document.getElementById("modalCategoryTitle");
+
+    function openGamesModal(category) {
+        modalGamesContainer.innerHTML = ''; // Clear previous games
+        modalCategoryTitle.textContent = category.toUpperCase();
+
+        const filteredGames = games.filter(game => game.category.toUpperCase() === category.toUpperCase());
+
+        if (filteredGames.length > 0) {
+            filteredGames.forEach(game => {
+                const gameCard = document.createElement('div');
+                gameCard.classList.add('modal-game-card');
+                gameCard.dataset.gameId = game.id; // Store game ID on the card element
+
+                gameCard.innerHTML = `
+                    <img src="${game.image_filename}" alt="${game.title}">
+                    <h3>${game.title}</h3>
+                    <p>${game.description}</p>
+                    <div class="game-card-footer">
+                        <button class="play-now-btn" data-game-id="${game.id}">Play Now</button>
+                    </div>
+                `;
+
+                modalGamesContainer.appendChild(gameCard);
+            });
+
+            // Add event listeners after the cards are created
+            modalGamesContainer.querySelectorAll('.modal-game-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const gameId = this.dataset.gameId;
+                    window.location.href = `/game/${gameId}`; // Navigate to game detail
+                });
+            });
+
+            modalGamesContainer.querySelectorAll('.play-now-btn').forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.stopPropagation(); // Prevent the card click event
+                    const gameId = this.dataset.gameId;
+                    window.location.href = `/play_game/${gameId}`; // Navigate to play the game
+                });
+            });
+
+        } else {
+            modalGamesContainer.innerHTML = '<p>No games found in this category.</p>';
+        }
+
+        modal.style.display = "block";
+    }
+
+    function closeGamesModal() {
+        modal.style.display = "none";
+    }
+
+    // Close the modal if the user clicks outside of it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            closeGamesModal();
+        }
+    }
+</script>
+
+    </main>
+
+<footer class="gameon-footer">
+  <div class="footer-container">
+
+    <div class="footer-column">
+      <h4>🕹️ WHAT IS GAME ON?</h4>
+      <p><strong>CELEBRATING BEST BROWSER GAMING</strong><br>
+        GAME ON is a modern tribute to classic fun. Built for accessibility, fun, and nostalgia, our platform is home to 8 curated games that range from fast-paced arcade classics to thoughtful board and word games—all playable directly in your browser.</p>
+
+      <p><strong>A COMMUNITY BUILT AROUND GAMES</strong><br>
+        Our games bring people together. Whether you're matching tiles, launching pixel bullets, or going head-to-head in strategy, GAME ON is about interactive fun and timeless competition.</p>
+
+      <p><strong>GAMING WITH PURPOSE</strong><br>
+        Games are more than just digital pastimes. They're a way to connect, to challenge yourself, and to unwind. GAME ON is here to preserve the magic of browser gaming and bring it to new generations.</p>
+    </div>
+
+    <div class="footer-column">
+      <h4>⚙️ TECHNOLOGIES BEHIND THE PORTAL</h4>
+      <p><strong>CROSS-DEVICE PLAYABILITY</strong><br>
+        GAME ON works seamlessly across mobile phones, tablets, desktops, and laptops. Our games are built using HTML and JavaScript to deliver performance and portability without the need for downloads or plugins.</p>
+
+      <p><strong>TIMELESS MEETS TECH</strong><br>
+        We combine modern web technologies with timeless gameplay mechanics to recreate the experience of classic board and arcade games in your browser.</p>
+
+      <p><strong>MADE FOR PLAYERS, BY PLAYERS</strong><br>
+        GAME ON is building a gaming community that values creativity, nostalgia, and fun. Whether you’re here to compete or just unwind, welcome to your new favorite place to play.</p>
+    </div>
+
+    <!-- COMBINED ABOUT & FOLLOW US COLUMN -->
+    <div class="footer-column">
+      <h4>ABOUT</h4>
+      <ul>
+        <li><a href="/terms">Terms and Conditions</a></li>
+        <li><a href="/privacy">Privacy Policy</a></li>
+        <li><a href="/game_developers">Website and Games Developers</a></li>
+     </ul>
+
+      <h4 style="margin-top: 50px;">FOLLOW US</h4>
+      <div class="social-icons">
+        <a href="https://x.com/game_on_2025" target="_blank" rel="noopener noreferrer"><i class="fab fa-x-twitter"></i></a>
+        <a href="https://www.facebook.com/profile.php?id=61576127302043" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook"></i></a>
+        <a href="https://www.instagram.com/gameo_n2025?igsh=M3Q1azhoaGMydTRl" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.youtube.com/@jeaddeahsuministrado9285" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+    <footer class="footer-bottom">
+  <p>© 2025<br>All rights reserved.</p>
+</footer>
+
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+<script>
+
+</script>
+</body>
+</html>

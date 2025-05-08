@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scrabble Game</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/scrabble.css') }}"
+    />
+  </head>
+  <body>
+    <div class="game-container">
+      <div class="header">
+        <h1>SCRABBLE GAME</h1>
+        <div class="scores">
+          <div id="player-score">Your Score: 0</div>
+          <div id="ai-score">AI Score: 0</div>
+          <div id="tiles-left">Tiles in bag: 100</div>
+        </div>
+        <div id="message">Your turn. Drag tiles to the board.</div>
+      </div>
+
+      <div class="game-area">
+        <div class="board-container">
+          <div id="board" class="board"></div>
+        </div>
+
+        <div class="controls">
+          <button id="play-button" class="control-button">Play</button>
+          <button id="pass-button" class="control-button">Pass</button>
+          <button id="exchange-button" class="control-button">Exchange</button>
+          <button id="shuffle-button" class="control-button">Shuffle</button>
+          <button id="quit-button" class="control-button">Quit</button>
+        </div>
+
+        <div class="rack-container">
+          <div id="rack" class="rack"></div>
+        </div>
+      </div>
+
+      <div id="setup-screen" class="setup-screen" style="z-index: 100">
+        <h2>SCRABBLE</h2>
+        <p class="game-description">Craft clever words and dominate the board with brainpower.</p>
+        <div class="menu-buttons">
+          <button id="start-button" class="start-button">Start Game</button>
+          <button id="menu-quit-button" class="start-button" onclick="quitGame()">Quit Game</button>
+        </div>
+      </div>
+
+
+
+      </div>
+
+      <div id="game-over" class="game-over hidden">
+        <h2>Game Over</h2>
+        <p id="winner-text">You win!</p>
+        <p id="final-score">Final Score: You 0 - AI 0</p>
+        <button id="play-again" class="play-again-btn">Back to Menu</button>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/scrabble.js') }}"></script>
+  </body>
+</html>

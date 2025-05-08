@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Game</title>
+    <link rel="stylesheet" href="../static/css/chess.css" />
+  </head>
+  <body>
+    <div id="game-container">
+      <!-- Game Menu Screen -->
+      <div id="menu-screen" class="screen">
+        <h1>CHESS GAME</h1>
+        <p class="game-description">
+            Outthink, outplay, and checkmate your way to glory.
+          </p>
+        <button id="play-button">Start Game</button>
+        <button id="quit-button">Quit Game</button>
+      </div>
+
+      <!-- Game Board Screen -->
+      <div id="game-screen" class="screen hidden">
+        <div class="game-layout">
+          <div class="side-panel left-panel">
+            <div class="turn-indicator-panel">
+              <input type="radio" id="white-turn-radio" name="turn" checked />
+              <label for="white-turn-radio">White's Turn</label>
+            </div>
+            <div class="captured-panel">
+              <h4 class="captured-subtitle">White captured:</h4>
+              <div id="white-captured" class="pieces-container"></div>
+              <p class="none-text">None</p>
+            </div>
+          </div>
+
+          <div class="board-container">
+            <div id="chess-board" class="chess-board"></div>
+            <div class="game-controls">
+              <button id="restart-button">Restart Game</button>
+              <button id="quit-game-button">Quit Game</button>
+            </div>
+          </div>
+
+          <div class="side-panel right-panel">
+            <div class="turn-indicator-panel">
+              <input type="radio" id="black-turn-radio" name="turn" />
+              <label for="black-turn-radio">Black's Turn</label>
+            </div>
+            <div class="captured-panel">
+              <h4 class="captured-subtitle">Black captured:</h4>
+              <div id="black-captured" class="pieces-container"></div>
+              <p class="none-text">None</p>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <!-- Winner Screen -->
+      <div id="winner-screen" class="screen hidden">
+        <h1 id="winner-text">White wins!</h1>
+        <div class="winner-buttons">
+          <button id="play-again-button">Play Again</button>
+          <button id="quit-winner-button">Quit Game</button>
+        </div>
+      </div>
+
+    <script src="../static/js/chess.js"></script>
+  </body>
+</html>

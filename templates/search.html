@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - GAME ON</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+
+</head>
+<body>
+    <header>
+        <div class="left-group">
+            <button id="settings-button"><i class="fas fa-bars"></i></button>
+                  <a onclick="window.location.href='/' + '?query=' + encodeURIComponent('{{ query }}')">
+      <div class="logo">GAME <span>ON</span></div>
+    </a>
+        </div>
+
+        <div class="search-container">
+    <form action="/search" method="GET">
+        <input type="text" id="search-input" name="query" placeholder="Search games..." value="{{ query }}">
+        <button type="submit" id="search-button"><i class="fas fa-search"></i></button>
+    </form>
+</div>
+    </header>
+
+    <!-- Sidebar: should be outside the header -->
+    <div id="mySidebar" class="sidebar">
+      <div class="settings-header">
+        <button class="close-btn" onclick="closeNav()">×</button>
+        <div class="logo">GAME <span>ON</span></div>
+      </div>
+      <div id="navigation-links">
+        <ul class="nav-list">
+          <li>
+            <button class="nav-button" onclick="tasks()">
+              TASKS
+            </button>
+          </li>
+          <li>
+            <button
+              class="nav-button"
+              onclick="rewards()"
+            >
+              REWARDS
+            </button>
+          </li>
+          <li>
+            <button class="nav-button" onclick="confirmLogout()">
+              LOG OUT
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const settingsButton = document.getElementById("settings-button");
+    const sidebar = document.getElementById("mySidebar");
+    const navigationLinks = document.getElementById("navigation-links");
+    const closeButton = sidebar.querySelector('.close-btn'); // Get the close button
+
+    let previousSidebarContent = null;
+
+    async function updateSettingsPanel() {
+  try {
+    const response = await fetch("/user_status");
+    const data = await response.json();
+    const navList = document.querySelector(".nav-list");
+    navList.innerHTML = ""; // clear everything first
+
+    // Always show TASKS
+    const tasksLi = document.createElement("li");
+    const tasksBtn = document.createElement("button");
+    tasksBtn.className = "nav-button";
+    tasksBtn.textContent = "TASKS";
+    tasksBtn.onclick = () => window.location.href = "/tasks";
+    tasksLi.appendChild(tasksBtn);
+    navList.appendChild(tasksLi);
+
+    // Always show REWARDS
+    const rewardsLi = document.createElement("li");
+    const rewardsBtn = document.createElement("button");
+    rewardsBtn.className = "nav-button";
+    rewardsBtn.textContent = "REWARDS";
+    rewardsBtn.onclick = () => window.location.href = "/rewards";
+    rewardsLi.appendChild(rewardsBtn);
+    navList.appendChild(rewardsLi);
+
+    // Show login or logout depending on user status
+    if (data.logged_in) {
+      const logoutLi = document.createElement("li");
+      const logoutBtn = document.createElement("button");
+      logoutBtn.className = "nav-button";
+      logoutBtn.textContent = "LOG OUT";
+      logoutBtn.onclick = confirmLogout;
+      logoutLi.appendChild(logoutBtn);
+      navList.appendChild(logoutLi);
+    } else {
+      const loginLi = document.createElement("li");
+      const loginBtn = document.createElement("button");
+      loginBtn.className = "nav-button";
+      loginBtn.textContent = "LOG IN";
+      loginBtn.onclick = () => window.location.href = "/login";
+      loginLi.appendChild(loginBtn);
+      navList.appendChild(loginLi);
+
+      const signupLi = document.createElement("li");
+      const signupBtn = document.createElement("button");
+      signupBtn.className = "nav-button";
+      signupBtn.textContent = "SIGN UP";
+      signupBtn.onclick = () => window.location.href = "/register";
+      signupLi.appendChild(signupBtn);
+      navList.appendChild(signupLi);
+    }
+
+  } catch (err) {
+    console.error("Failed to update settings panel:", err);
+  }
+}
+
+
+    window.showMainNavigation = function () {
+        console.log("Showing main navigation...");
+        if (previousSidebarContent) {
+            navigationLinks.innerHTML = previousSidebarContent;
+            previousSidebarContent = null;
+            // Re-attach event listeners if necessary
+        }
+    };
+
+    window.confirmLogout = function () {
+        if (confirm("Are you sure you want to log out?")) {
+            window.location.href = '/logout';
+        }
+    };
+
+    function openNav() {
+        updateSettingsPanel();
+        sidebar.classList.add("show");
+    }
+
+    function closeNav() {
+        sidebar.classList.remove("show");
+    }
+
+    settingsButton.addEventListener("click", openNav);
+    closeButton.addEventListener("click", closeNav);
+});
+</script>
+
+    <main>
+        <h1 class="search-results-title">Search Results for "{{ query }}"</h1>
+        
+        {% if games|length > 0 %}
+        <div class="games-container">
+            {% for game in games %}
+            <div class="game-card" onclick="window.location.href='/game/{{ game.id }}'">
+                <div class="game-image">
+                   <img src="{{ url_for('static', filename='images/' + (game.image_filename or 'placeholder.jpg')) }}"
+     alt="{{ game.title }}"
+     onerror="this.src='{{ url_for('static', filename='images/placeholder.jpg') }}'">
+
+
+                    <span class="game-badge">{{ game.category }}</span>
+                </div>
+                <div class="game-info">
+                    <h3 class="game-title">{{ game.title }}</h3>
+                    <p class="game-description">{{ game.description }}</p>
+                    <div class="game-meta">
+                        <button class="play-now-btn">Play Now</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-results">
+            <p>No games found matching "{{ query }}". Try a different search term.</p>
+        </div>
+        {% endif %}
+    </main>
+
+
+<footer class="gameon-footer">
+  <div class="footer-container">
+
+    <div class="footer-column">
+      <h4>🕹️ WHAT IS GAME ON?</h4>
+      <p><strong>CELEBRATING BEST BROWSER GAMING</strong><br>
+        GAME ON is a modern tribute to classic fun. Built for accessibility, fun, and nostalgia, our platform is home to 8 curated games that range from fast-paced arcade classics to thoughtful board and word games—all playable directly in your browser.</p>
+
+      <p><strong>A COMMUNITY BUILT AROUND GAMES</strong><br>
+        Our games bring people together. Whether you're matching tiles, launching pixel bullets, or going head-to-head in strategy, GAME ON is about interactive fun and timeless competition.</p>
+
+      <p><strong>GAMING WITH PURPOSE</strong><br>
+        Games are more than just digital pastimes. They're a way to connect, to challenge yourself, and to unwind. GAME ON is here to preserve the magic of browser gaming and bring it to new generations.</p>
+    </div>
+
+    <div class="footer-column">
+      <h4>⚙️ TECHNOLOGIES BEHIND THE PORTAL</h4>
+      <p><strong>CROSS-DEVICE PLAYABILITY</strong><br>
+        GAME ON works seamlessly across mobile phones, tablets, desktops, and laptops. Our games are built using HTML and JavaScript to deliver performance and portability without the need for downloads or plugins.</p>
+
+      <p><strong>TIMELESS MEETS TECH</strong><br>
+        We combine modern web technologies with timeless gameplay mechanics to recreate the experience of classic board and arcade games in your browser.</p>
+
+      <p><strong>MADE FOR PLAYERS, BY PLAYERS</strong><br>
+        GAME ON is building a gaming community that values creativity, nostalgia, and fun. Whether you’re here to compete or just unwind, welcome to your new favorite place to play.</p>
+    </div>
+
+    <!-- COMBINED ABOUT & FOLLOW US COLUMN -->
+    <div class="footer-column">
+      <h4>ABOUT</h4>
+      <ul>
+        <li><a href="/terms">Terms and Conditions</a></li>
+        <li><a href="/privacy">Privacy Policy</a></li>
+        <li><a href="/game_developers">Website and Games Developers</a></li>
+     </ul>
+
+      <h4 style="margin-top: 50px;">FOLLOW US</h4>
+      <div class="social-icons">
+        <a href="https://x.com/game_on_2025" target="_blank" rel="noopener noreferrer"><i class="fab fa-x-twitter"></i></a>
+        <a href="https://www.facebook.com/profile.php?id=61576127302043" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook"></i></a>
+        <a href="https://www.instagram.com/gameo_n2025?igsh=M3Q1azhoaGMydTRl" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.youtube.com/@jeaddeahsuministrado9285" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+    <footer class="footer-bottom">
+  <p>© 2025<br>All rights reserved.</p>
+</footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search-input');
+  });
+</script>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+
+</body>
+
+</html>

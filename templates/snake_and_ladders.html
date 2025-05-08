@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Snakes and Ladders</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/snake_and_ladders.css') }}"
+    />
+    <script src="{{ url_for('static', filename='js/snake_and_ladders.js') }}"></script>
+  </head>
+  <body>
+    <div id="game-container">
+      <canvas id="gameCanvas" width="900" height="600"></canvas>
+      <div id="controls">
+        <div id="dice-container">
+          <img id="dice-img" src="/static/assets/dice1.png" alt="Dice" />
+        </div>
+        <div class="player-buttons-row">
+          <button id="player1-btn" class="player-btn">Player 1</button>
+          <button id="player2-btn" class="player-btn">Player 2</button>
+          <button id="player3-btn" class="player-btn">Player 3</button>
+          <button id="player4-btn" class="player-btn">Player 4</button>
+        </div>
+        <div id="game-options">
+          <button id="back-btn">Back</button>
+          <button id="mute-btn">Mute Music</button>
+          <button id="play-music-btn">Play Music</button>
+        </div>
+      </div>
+      <div id="message-display"></div>
+    </div>
+
+    <div id="menu-screen" class="screen">
+      <h1>Snakes and Ladders</h1>
+      <button id="play-btn" class="menu-btn">Play</button>
+      <button id="quit-btn" class="menu-btn">Quit</button>
+      <div class="menu-options">
+        <button id="mute-menu-btn">Mute Music</button>
+        <button id="play-menu-music-btn">Play Music</button>
+      </div>
+    </div>
+
+    <div id="options-screen" class="screen">
+      <h1>Select Players</h1>
+      <button id="single-player-btn" class="option-btn">Single Player</button>
+      <button id="two-player-btn" class="option-btn">2 Players</button>
+      <button id="three-player-btn" class="option-btn">3 Players</button>
+      <button id="four-player-btn" class="option-btn">4 Players</button>
+      <button id="back-to-menu-btn" class="option-btn">Back</button>
+    </div>
+
+
+    <div id="intro-screen" class="screen active">
+      <img id="intro-img" src="/static/assets/intropic.png" alt="Intro" />
+    </div>
+  </body>
+</html>

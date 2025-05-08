@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tetris</title>
+    <link rel="stylesheet" href="/static/css/tetris.css" />
+  </head>
+  <body>
+    <div class="main-menu">
+      <h1>TETRIS</h1>
+      <p class="game-description">
+        Drop, rotate, and stack your way to a perfect line!
+      </p>
+      <div class="menu-buttons">
+        <button id="startGameButton" class="start-button">Start Game</button>
+        <button id="quitGameButton" class="quit-button">Quit Game</button>
+      </div>
+    </div>
+    <div class="game-container">
+      <div class="game-board">
+        <canvas id="tetris-canvas"></canvas>
+      </div>
+      <div class="sidebar">
+        <h1>TETRIS</h1>
+        <div class="stats">
+          <p>Score: <span id="score">0</span></p>
+          <p>Level: <span id="level">1</span></p>
+          <p>Lines: <span id="lines">0</span></p>
+        </div>
+        <div class="next-piece">
+          <p>Next Piece:</p>
+          <canvas id="next-piece-canvas"></canvas>
+        </div>
+        <div class="controls">
+          <h3>Controls:</h3>
+          <p>Left/Right: Move</p>
+          <p>Up: Rotate</p>
+          <p>Down: Soft Drop</p>
+          <p>Space: Hard Drop</p>
+          <p>P: Pause</p>
+          <p>Q: Quit</p>
+        </div>
+      </div>
+    </div>
+    <div id="pause-overlay" class="overlay">
+      <div class="overlay-content">
+        <h2>PAUSED</h2>
+        <p>Press P to Continue</p>
+      </div>
+    </div>
+    <div id="game-over-overlay" class="overlay">
+      <div class="overlay-content">
+        <h2>GAME OVER</h2>
+        <p>Press R to Restart</p>
+        <p>Press Q to Return to Home</p>
+      </div>
+    </div>
+    <script src="/static/js/tetris.js"></script>
+  </body>
+</html>

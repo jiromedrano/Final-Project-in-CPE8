@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkers Game</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/checkers.css') }}"
+    />
+  </head>
+  <body>
+    <div id="menu-screen">
+      <h1 class="game-title">CHECKERS GAME</h1>
+      <div class="menu-buttons">
+        <p class="game-description">
+          Leap, capture, and crown your way to victory!
+        </p>
+        <button id="start-game-checkers">Start Game</button>
+        <button id="quit-game-menu" data-home-url="{{ url_for('home') }}">
+          Quit Game
+        </button>
+      </div>
+    </div>
+
+    <div class="game-container">
+      <div class="status-bar">
+        <div id="current-player">
+          <strong>Current Player: <span class="red-text">Red</span></strong>
+        </div>
+        <div>
+          <button id="reset-button">Reset Game</button>
+          <button id="quit-game-ingame" data-home-url="{{ url_for('home') }}">
+            Quit Game
+          </button>
+        </div>
+      </div>
+      <div id="winner-message" class="hidden"></div>
+      <div id="board" class="board"></div>
+    </div>
+    <script src="{{ url_for('static', filename='js/checkers.js') }}"></script>
+  </body>
+</html>

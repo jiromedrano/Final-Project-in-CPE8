@@ -1,0 +1,314 @@
+/* Tic Tac Toe Game Styles */
+
+/* Base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background-color: #f8f8f8;
+  color: #333;
+  line-height: 1.6;
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  min-height: 100vh; /* Ensure the body takes up at least the full viewport height */
+  margin: 0; /* Remove default body margin */
+}
+
+.tic-tac-toe-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 20px;
+  position: relative;
+}
+
+/* Game title */
+.game-title {
+  font-size: 4.5rem;
+  font-weight: bold;
+  color: #c71585; /* Deep pink */
+  text-align: center;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  letter-spacing: 1px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+
+.game-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  background-color: rgba(255, 182, 193, 0.2); /* Light pink with opacity */
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(219, 112, 147, 0.5);
+  margin-bottom: 30px; /* This margin will now be relative to the centered position */
+
+  text-align: center;
+  transition: transform 0.3s ease;
+  width: 750px;
+  height: 400px;
+  backdrop-filter: blur(100px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.game-description {
+  text-align: center;
+  color: black;
+  max-width: 500px;
+  line-height: 1.6;
+  font-size: 1.1em;
+  margin-bottom: 30px;
+  line-height: 1.5;
+}
+
+
+.menu-button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.play-button {
+  background-color: #ff1493; /* Deeper pink */
+  font-size: 16px;
+  padding: 15px 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s,
+    background-color 0.3s;
+}
+
+.play-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  background-color: #ff1493; /* Deeper pink */
+}
+
+.quit-button {
+  background-color: #888;
+  font-size: 16px;
+}
+
+.quit-button:hover {
+  background-color: #666;
+}
+
+/* Game Play Screen */
+.game-play {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Game board */
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+  max-width: 540px;
+  aspect-ratio: 1;
+  margin: 0 auto 30px auto;
+  position: relative;
+  background-color: rgba(255, 182, 193, 0.3);
+  padding: 15px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.square {
+  background-color: #ffb6c1; /* Light pink */
+  border: 3px solid #2d2d2d;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+
+.square:hover {
+  background-color: #ff69b4; /* Hot pink */
+  transform: scale(1.03);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Game UI */
+.game-ui {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.game-status {
+  font-size: 24px;
+  font-weight: bold;
+  color: #c71585; /* Deep pink */
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  background-color: rgba(255, 182, 193, 0.2);
+  border-radius: 10px;
+  display: inline-block;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.game-button {
+  background-color: #ff69b4; /* Hot pink */
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.game-button:hover {
+  background-color: #ff1493; /* Deeper pink */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Winner Modal */
+.winner-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 100;
+  justify-content: center;
+  align-items: center;
+}
+
+.winner-content {
+  background-color: white;
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: pop-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  transform: scale(0.8);
+}
+
+@keyframes pop-in {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+#winner-text {
+  font-size: 32px;
+  color: #c71585;
+  margin-bottom: 20px;
+}
+
+.winner-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* Canvas for particles */
+#particles-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .game-board {
+    max-width: 450px;
+  }
+
+  .game-title {
+    font-size: 72px;
+  }
+
+  .game-status {
+    font-size: 24px;
+  }
+
+  .game-button {
+    font-size: 16px;
+    padding: 10px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-board {
+    max-width: 300px;
+  }
+
+  .game-title {
+    font-size: 72px;
+  }
+
+  .game-status {
+    font-size: 24px;
+  }
+
+  .button-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .winner-content {
+    padding: 20px;
+  }
+
+  #winner-text {
+    font-size: 32px;
+  }
+}

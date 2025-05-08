@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME ON - Tasks</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <style>
+      .h2 {
+        font-size: 48px; /* Enlarge the font size */
+        font-weight: bold;
+        color:#ff1493;
+        text-align: center; /* Center the text horizontally */
+        margin-bottom: 10px; /* Add some space below the title */
+      }
+
+      .tasks-container {
+        max-width: 800px;
+        margin: 30px auto; /* Increase top margin to push down, and keep horizontal centering */
+        padding: 30px; /* Add more padding inside the container */
+        background-color: #fff;
+        border-radius: 12px; /* More rounded corners */
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* More pronounced shadow */
+      }
+
+      .flash-messages {
+        margin-bottom: 20px;
+      }
+
+      .flash-message {
+        padding: 12px 15px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        animation: slideIn 0.3s ease-out;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .flash-content {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .flash-icon {
+        font-size: 18px;
+      }
+
+      .flash-close {
+        background: none;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        opacity: 0.7;
+      }
+
+      .flash-close:hover {
+        opacity: 1;
+      }
+
+      .flash-message.success {
+        background-color: #d4edda;
+        border-left: 4px solid #28a745;
+        color: #155724;
+      }
+
+      .flash-message.error {
+        background-color: #f8d7da;
+        border-left: 4px solid #dc3545;
+        color: #721c24;
+      }
+
+      .flash-message.info {
+        background-color: #d1ecf1;
+        border-left: 4px solid #17a2b8;
+        color: #0c5460;
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateY(-20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .task-complete-notification {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #28a745;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 1000;
+        animation:
+          slideUp 0.3s ease-out,
+          fadeOut 0.5s ease-out 4.5s forwards;
+        max-width: 350px;
+      }
+
+      @keyframes slideUp {
+        from {
+          transform: translateY(100px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadeOut {
+        from {
+          opacity: 1;
+        }
+        to {
+          opacity: 0;
+          visibility: hidden;
+        }
+      }
+
+      .task-form {
+        margin-bottom: 30px;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+      }
+
+      .task-form h3 {
+        margin-top: 0;
+        color: #333;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+
+      .task-list {
+        list-style: none;
+        padding: 0;
+      }
+
+      .task-item {
+        padding: 15px;
+        margin-bottom: 10px;
+        border-left: 4px solid #007bff;
+        background-color: #f8f9fa;
+        border-radius: 4px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .task-item.completed {
+        border-left-color: #28a745;
+        opacity: 0.7;
+      }
+
+      .task-info {
+        flex-grow: 1;
+      }
+
+      .task-description {
+        font-size: 16px;
+        margin-bottom: 5px;
+      }
+
+      .task-meta {
+        font-size: 12px;
+        color: #6c757d;
+      }
+
+      .task-info-text {
+        margin-bottom: 20px;
+        color: #6c757d;
+        font-style: italic;
+        text-align: center; /* Center the instruction text as well */
+      }
+
+      .task-actions {
+        display: flex;
+        gap: 10px;
+      }
+
+      .complete-btn {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .complete-btn:hover {
+        background-color: #218838;
+      }
+
+      .points-badge {
+        background-color: #007bff;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 10px;
+        font-size: 12px;
+        margin-left: 10px;
+      }
+
+      .user-points {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 18px;
+      }
+
+      .user-points span {
+        font-weight: bold;
+        color: #007bff;
+      }
+
+      .no-tasks {
+        text-align: center;
+        padding: 20px;
+        color: #6c757d;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="left-group">
+        <button id="settings-button"><i class="fas fa-bars"></i></button>
+        <div class="logo">GAME <span>ON</span></div>
+      </div>
+
+      <div class="back-button" onclick="history.back()">
+        <a href="/">Back</a>
+      </div>
+    </header>
+
+    <div id="mySidebar" class="sidebar">
+      <div class="settings-header">
+        <button class="close-btn" onclick="closeNav()">×</button>
+        <div class="logo">GAME <span>ON</span></div>
+      </div>
+      <div id="navigation-links">
+        <ul class="nav-list">
+           <li>
+            <button class="nav-button" onclick="window.location.href='/'">
+              HOME
+            </button>
+          </li>
+          <li>
+            <button class="nav-button" onclick="window.location.href='/tasks'">
+              TASKS
+            </button>
+          </li>
+          <li>
+            <button
+              class="nav-button"
+              onclick="window.location.href='/rewards'"
+            >
+              REWARDS
+            </button>
+          </li>
+          <li>
+            <button class="nav-button" onclick="confirmLogout()">
+              LOG OUT
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <main>
+      <div class="tasks-container">
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %}
+        <div class="flash-messages">
+          {% for category, message in messages %}
+          <div class="flash-message {{ category }}">
+            <div class="flash-content">
+              <i
+                class="flash-icon fas {% if category == 'success' %}fa-check-circle{% elif category == 'error' %}fa-exclamation-circle{% else %}fa-info-circle{% endif %}"
+              ></i>
+              <span>{{ message }}</span>
+            </div>
+            <button
+              class="flash-close"
+              onclick="this.parentElement.style.display='none'"
+            >
+              &times;
+            </button>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %} {% endwith %}
+        <h2 class="h2">TASKS</h2>
+
+        <div class="user-points">
+          Your Points: <span>{{ current_user.points }}</span>
+        </div>
+
+        <p class="task-info-text">
+          Complete these tasks to earn rewards!
+        </p>
+        {% if tasks %}
+        <ul class="task-list">
+          {% for task in tasks %}
+          <li class="task-item {% if task.completed %}completed{% endif %}" id="task-{{ task.id }}">
+            <div class="task-info">
+              <div class="task-description">
+                {{ task.description }}
+                <span class="points-badge"
+                  >{{ task.reward_points }} points</span
+                >
+              </div>
+              <div class="task-meta">
+                <span id="task-completed-{{ task.id }}" style="color: {% if task.completed %}#28a745{% else %}#007bff{% endif %}">
+                    {% if task.completed %}Completed{% else %}In Progress{% endif %}
+                </span>
+
+              </div>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <div class="no-tasks">
+          <p>No tasks available at the moment. Check back later!</p>
+        </div>
+        {% endif %}
+      </div>
+    </main>
+
+    <script>
+      function showTaskCompletionNotification(taskDescription, points) {
+        const notification = document.createElement("div");
+        notification.className = "task-complete-notification";
+        notification.innerHTML = `
+          <i class="fas fa-check-circle" style="font-size: 20px;"></i>
+          <div>
+            <strong>Task Completed!</strong><br>
+            ${taskDescription}<br>
+            <span style="color: #ffdd57;">+${points} points</span>
+          </div>
+        `;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+          notification.remove();
+        }, 5000);
+      }
+
+      // Store previous task statuses to detect changes
+      let previousTaskStatuses = {};
+
+      function refreshTasksLive() {
+        fetch("/api/tasks/status")
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            // Update user points if available
+            if (data.length > 0 && data[0].user_points !== undefined) {
+              const userPointsElement = document.getElementById("user-points");
+              if (userPointsElement) {
+                userPointsElement.textContent = data[0].user_points;
+              }
+            }
+
+            data.forEach((taskStatus) => {
+              const taskId = taskStatus.task_id;
+              const completedElement = document.getElementById(
+                `task-completed-${taskId}`,
+              );
+              const progressElement = document.getElementById(
+                `task-progress-${taskId}`,
+              );
+              const requiredElement = document.getElementById(
+                `task-required-${taskId}`,
+              );
+              const taskItem = document.getElementById(`task-${taskId}`);
+
+              // Check if this task was just completed
+              const wasJustCompleted =
+                !previousTaskStatuses[taskId]?.completed &&
+                taskStatus.completed;
+
+              if (completedElement) {
+                completedElement.textContent = taskStatus.completed
+                  ? "Completed"
+                  : "In Progress";
+                completedElement.style.color = taskStatus.completed
+                  ? "#28a745"
+                  : "#007bff";
+
+                if (taskStatus.completed) {
+                  taskItem.classList.add("completed");
+
+                  // If task was just completed, show notification
+                  if (wasJustCompleted) {
+                    const taskDescription = taskItem
+                      .querySelector(".task-description")
+                      .textContent.trim();
+                    const pointsMatch = taskDescription.match(/(\d+) points/);
+                    const points = pointsMatch ? pointsMatch[1] : "10";
+
+                    showTaskCompletionNotification(taskDescription, points);
+                  }
+                }
+              }
+
+              if (progressElement && requiredElement) {
+                progressElement.textContent = taskStatus.progress_count;
+                requiredElement.textContent = taskStatus.required_count;
+              }
+
+              // Update previous status
+              previousTaskStatuses[taskId] = { ...taskStatus };
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching task status:", error);
+          });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const settingsButton = document.getElementById("settings-button");
+        const sidebar = document.getElementById("mySidebar");
+        const closeButton = sidebar.querySelector(".close-btn");
+
+        function openNav() {
+          sidebar.classList.add("show");
+        }
+
+        function closeNav() {
+          sidebar.classList.remove("show");
+        }
+
+        window.confirmLogout = function () {
+          if (confirm("Are you sure you want to log out?")) {
+            window.location.href = "/logout";
+          }
+        };
+
+        settingsButton.addEventListener("click", openNav);
+        closeButton.addEventListener("click", closeNav);
+      });
+    </script>
+  </body>
+</html>

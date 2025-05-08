@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game Developers | GAME ON</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .developer-section {
+            display: flex;
+            flex-direction: column; /* Stack on small screens */
+            align-items: center;      /* Center items horizontally */
+            margin-bottom: 20px;
+            padding: 10px;
+            border-bottom: 1px solid #ddd; /* Add a divider between sections */
+        }
+        .developer-section:last-child {
+             border-bottom: none; /* Remove border from the last section*/
+        }
+
+        .developer-info {
+            margin-top: 10px; /* Add space above info on small screens*/
+            text-align: center;  /* Center text on small screens */
+        }
+
+        .developer-section img {
+            width: 200px;       /* Increased size for better display */
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 10px; /* Add space below image on small screens */
+        }
+
+        @media (min-width: 768px) {
+            .developer-section {
+                flex-direction: row; /* Arrange image and info in a row on larger screens */
+                justify-content: flex-start; /* Align items to the start, adjust as needed */
+                text-align: left; /* Re-align text to the left on larger screens if desired*/
+            }
+            .developer-info {
+                margin-left: 20px; /* Add left margin for spacing on larger screens */
+                margin-top: 0;  /* Remove top margin on larger screens */
+                flex: 1; /* Allow the text to take up available space */
+                text-align: left; /* Re-align text to the left on larger screens*/
+            }
+             .developer-section img {
+                margin-bottom: 0; /* Remove bottom margin on larger screens */
+            }
+        }
+
+        .developer-name {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .developer-bio {
+            font-size: 1.1em;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .developer-role {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #007bff; /* Example: Blue color for role */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="left-group">
+            <div class="logo">GAME <span>ON</span></div>
+        </div>
+        <div class="back-button" onclick="history.back()">
+        <a href="/">Back</a>
+        </div>
+    </header>
+
+    <div class="canvas-container">
+        <h1>WEBSITE & GAMES DEVELOPERS</h1>
+
+        <section class="developer-section">
+    <div class="developer-image">
+        <img src="{{ url_for('static', filename='images/jeaddeah.jpg') }}" alt="A dedicated developer, Jeaddeah Suministrado" />
+    </div>
+    <div class="developer-info">
+        <h2 class="developer-name">JEADDEAH SUMINISTRADO</h2>
+        <p class="developer-bio">
+            Driven by a passion for crafting engaging digital experiences, Jeaddeah is a budding full-stack developer with a knack for turning creative visions into interactive realities. As the co-creator of GAME ON, a vibrant hub hosting a collection of eight unique games, she poured her energy into both the front-end design, ensuring an intuitive and visually appealing user interface, and the back-end architecture that powers seamless gameplay. From conceptualizing innovative game mechanics to meticulously debugging lines of code, Jeaddeah's dedication to quality and user satisfaction shines through in every aspect of her work. Eager to continue learning and pushing the boundaries of interactive entertainment, she's excited to connect with fellow developers and explore new opportunities in the ever-evolving tech landscape.
+        </p>
+    </div>
+</section>
+
+<section class="developer-section">
+    <div class="developer-image">
+        <img src="{{ url_for('static', filename='images/jiro.jpg') }}" alt="A creative developer, Jiro Medrano" />
+    </div>
+    <div class="developer-info">
+        <h2 class="developer-name">JIRO MEDRANO</h2>
+        <p class="developer-bio">
+            A curious mind fueled by a love for gaming and problem-solving, Jiro is a resourceful developer who thrives on bringing interactive concepts to life. Together with a partner, he co-created GAME ON, a dynamic platform featuring an impressive portfolio of eight unique games. His expertise lies in the technical intricacies of game development, from implementing robust game logic and optimizing performance to managing the server infrastructure that ensures a smooth and engaging user experience. Jiro's commitment to creating compelling and enjoyable games is evident in the diverse range of titles available on the portal. He is constantly seeking new challenges and technologies to expand his skillset and contribute innovative solutions to the world of online gaming.
+        </p>
+    </div>
+</section>
+    </div>
+
+<style>
+    h1 {
+    font-size: 48px;
+    font-weight: bold;
+    color: #000;
+}
+
+p {
+    font-size: 16px;
+    color: black;
+    text-align: justify;
+}
+
+h2 {
+    font-size: 32px;
+    font-weight: bold;
+    color: #000;
+}
+
+</style>
+</body>
+</html>
