@@ -471,7 +471,7 @@ def play_game(game_id):
 def send_reset_email(user):
     token = generate_reset_token(user.email)
     reset_link = url_for('reset_password', token=token, _external=True)
-    reset_link = reset_link.replace('127.0.0.1', '<192.168.129.3>')  # Replace with your local IP
+    reset_link = reset_link.replace('127.0.0.1', '<192.168.52.3>')  # Replace with your local IP
     subject = "Password Reset Request"
     body = f"""
     Hello {user.username},
@@ -966,4 +966,4 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
         create_default_tasks_and_rewards()
-    app.run(debug=True, host='192.168.129.3')
+    app.run(debug=True, host='192.168.52.3')
